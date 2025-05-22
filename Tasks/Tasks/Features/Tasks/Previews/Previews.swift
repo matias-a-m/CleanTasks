@@ -1,29 +1,21 @@
 import SwiftUI
 
 #Preview("All Tasks") {
-    let vm = TaskListViewModel()
+    let vm = TaskListViewModel(repository: MockTaskRepository())
     vm.filterType = .all
-    return TaskListView(viewModel: vm)
+    return NavigationStack {
+        VStack(spacing: 24) {
+            Text("Your Task Manager")
+                .font(.title2).fontWeight(.semibold)
+                .padding(.top, 24)
+
+            TaskSegmentedControl(viewModel: vm)
+            TaskListView(viewModel: vm)
+        }
+        .padding()
+        .background(Color(UIColor.systemGray6).ignoresSafeArea())
+        .navigationTitle("Tasks")
+        .navigationBarTitleDisplayMode(.inline)
+    }
 }
 
-#Preview("Completed Only") {
-    let vm = TaskListViewModel()
-    vm.filterType = .completed
-    return TaskListView(viewModel: vm)
-}
-
-#Preview("Pending Only") {
-    let vm = TaskListViewModel()
-    vm.filterType = .pending
-    return TaskListView(viewModel: vm)
-}
-
-#Preview("Empty List") {
-    let vm = TaskListViewModel()
-    vm.tasks = []
-    return TaskListView(viewModel: vm)
-}
-
-#Preview("App Entry") {
-    TasksAppView()
-}

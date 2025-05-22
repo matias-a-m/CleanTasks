@@ -9,6 +9,7 @@ A simple task management application built with SwiftUI, following advanced decl
 * Display all, completed, or pending tasks.
 * Toggle task completion with smooth animations and haptic feedback.
 * Accessibility support with VoiceOver announcements.
+* Modular filtering and data injection via repositories.
 
 ## Architecture
 
@@ -16,28 +17,28 @@ A simple task management application built with SwiftUI, following advanced decl
 
 * **Single Responsibility**: Views handle UI; view models handle state; models represent data.
 * **Open/Closed**: Filtering strategies are extensible via `TaskFiltering` protocols.
-* **Dependency Inversion**: View models depend on abstractions (`TaskFiltering`), not concrete implementations.
+* **Dependency Inversion**: View models depend on abstractions (`TaskFiltering`, `TaskRepository`), not concrete implementations.
 
 ### Layer Separation
 
 * **Model**: `Task` struct represents an individual task.
 * **Filtering**: `TaskFiltering` protocol and concrete filters (`AllTasksFilter`, `CompletedTasksFilter`, `PendingTasksFilter`).
-* **ViewModel**: `TaskListViewModel` manages tasks, filter state, and business logic.
-* **View**: SwiftUI views (`TaskListView`, `TasksAppView`) render UI and bind to view model.
+* **ViewModel**: `TaskListViewModel` manages tasks, filter state, and business logic. It receives a `TaskRepository` dependency for data source abstraction.
+* **Repository**: `TaskRepository` protocol with a `MockTaskRepository` implementation for preview and testing.
+* **View**: SwiftUI views (`TaskListView`, `TasksAppView`, `TaskSegmentedControl`) render UI and bind to the view model.
 
 ## SwiftUI Lifecycle & State
 
-* `@State` for local view state (e.g., filter selection).
-* `@StateObject` / `@ObservedObject` for view model observation.
-* `@Binding` to pass state down the view hierarchy.
+* `@State` for local view state (e.g., view model instantiation).
+* `@Observable` in `TaskListViewModel` to publish changes to views.
+* `@Binding` for two-way data flow when needed.
 * SwiftUI automatically rebuilds views on state change, ensuring visual consistency.
 
 ## Property Wrappers
 
-* `@State` and `@StateObject` in `TasksAppView` for view model.
-* `@Observable` in `TaskListViewModel` to publish changes.
-* `@Binding` for two-way data flow when needed.
-* `@EnvironmentObject` can be applied for shared data across views.
+* `@State` in `TasksAppView` to manage view model lifecycle.
+* `@Observable` in `TaskListViewModel` to enable reactive updates.
+* `@Binding` used in `TaskSegmentedControl` to reflect changes in filter selection.
 
 ## Installation
 

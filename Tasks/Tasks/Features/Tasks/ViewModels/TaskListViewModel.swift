@@ -1,18 +1,23 @@
 import Foundation
 import Observation
 
+public protocol TaskRepository {
+    func fetchTasks() -> [Task]
+}
+
 @Observable
 public final class TaskListViewModel {
     public var tasks: [Task] = []
     public var filterType: TaskFilterType = .all
+    private let repository: TaskRepository
 
-    public init() { loadInitialTasks() }
-    private func loadInitialTasks() {
-        tasks = [
-            Task(title: "Read documentation", isCompleted: false),
-            Task(title: "Apply SRP in view", isCompleted: true),
-            Task(title: "Refactor logic", isCompleted: false)
-        ]
+    public init(repository: TaskRepository) {
+        self.repository = repository
+        loadTasks()
+    }
+
+    private func loadTasks() {
+        tasks = repository.fetchTasks()
     }
 
     public var visibleTasks: [Task] {

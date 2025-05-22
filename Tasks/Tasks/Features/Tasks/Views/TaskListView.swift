@@ -30,7 +30,7 @@ public struct TaskListView: View {
                 // Accesibilidad
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel(task.title)
-                .accessibilityValue(task.isCompleted ? "Completada" : "Pendiente")
+                .accessibilityValue(task.isCompleted ? "Completed" : "Pending")
                 .accessibilityAddTraits(.isButton)
                 .accessibilityAddTraits(task.isCompleted ? .isSelected : [])
                 .onTapGesture {
@@ -39,8 +39,8 @@ public struct TaskListView: View {
                     }
                     HapticManager.shared.notifySuccess()
                     let announcement = willComplete
-                        ? "Tarea completada: \(task.title)"
-                        : "Tarea marcada como pendiente: \(task.title)"
+                        ? "Task completed: \(task.title)"
+                        : "Task marked as pending: \(task.title)"
                     UIAccessibility.post(notification: .announcement, argument: announcement)
                 }
                 .listRowSeparator(.hidden)
